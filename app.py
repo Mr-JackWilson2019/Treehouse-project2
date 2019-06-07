@@ -68,15 +68,13 @@ if __name__ == "__main__":
                 {team_id:team for team_id, team in\
                 enumerate(balanced_teams, start=1)}
 
-            print(team_id_team)
-
             for team_id, team in team_id_team.items():
                 print(f"{team_id} {team}")
             
-            user_team = input(": ")
+            user_team = int(input(": "))
 
             #call team stats function based on input team
-            display_team_stats(team_id, team_id_team, balanced_teams)
+            display_team_stats(user_team, team_id_team, balanced_teams)
             
             user_continue = input("Press ENTER to continue")
         elif user_stats_or_quit == "2":
