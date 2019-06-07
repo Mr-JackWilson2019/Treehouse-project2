@@ -33,9 +33,18 @@ def display_team_stats(team_id, team_id_team, balanced_teams):  #wish I knew typ
 
 
 if __name__ == "__main__":
-    # Cleaning data like this is beyond pointless. It's literally just a copy
     TEAMS = [team for team in constants.TEAMS]
-    PLAYERS = [player_data for player_data in constants.PLAYERS]
+    players = [player_data for player_data in constants.PLAYERS]
+    
+    for player_data in players:
+        player_data['height'] = int(player_data['height'][:2])
+        
+        if player_data['experience'] == 'YES':
+            player_data['experience'] = True
+        else:
+            player_data['experience'] = False
+
+    PLAYERS = players[:]
 
     balanced_teams = random_team_assingment(PLAYERS, TEAMS)
 
@@ -58,6 +67,8 @@ if __name__ == "__main__":
             team_id_team =\
                 {team_id:team for team_id, team in\
                 enumerate(balanced_teams, start=1)}
+
+            print(team_id_team)
 
             for team_id, team in team_id_team.items():
                 print(f"{team_id} {team}")
