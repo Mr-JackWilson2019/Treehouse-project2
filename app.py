@@ -63,7 +63,8 @@ def display_team_stats(team_id, team_id_team, balanced_teams):  #wish I knew typ
 
 if __name__ == "__main__":
     TEAMS = [team for team in constants.TEAMS]
-    players = [player_data for player_data in constants.PLAYERS]
+    PLAYERS = copy.deepcopy(constants.PLAYERS)
+    players = [player_data for player_data in PLAYERS]
     
     for player_data in players:
         player_data['height'] = int(player_data['height'][:2])
@@ -73,7 +74,8 @@ if __name__ == "__main__":
         else:
             player_data['experience'] = False
 
-    PLAYERS = copy.deepcopy(players)
+    # making this a constant again. This seems like code smell
+    PLAYERS = players
 
     balanced_teams = random_team_assingment(PLAYERS, TEAMS)
 
