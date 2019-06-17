@@ -1,20 +1,41 @@
-import constants  #this assumes that constants is in the same folder
+import copy
 import random
+
+import constants  #this assumes that constants is in the same folder
+
 
 
 def random_team_assingment(PLAYERS, TEAMS):
     """This function randomly assigns players to teams without repeating
     values such that a third, len(players)/3, of the total players are 
-    each team."""
-
-    players = PLAYERS[:]
+    each team.
     
+    This function also garuntees that there are an equal number of 
+    experienced players on each team. This function will not work if the
+    total number of playes is not evenly divisible by 6."""
+
+    # divide the players into experienced and inexpereinced
+    experienced_players =\
+        [player for player in PLAYERS if player['experience']]
+    inexperienced_players =\
+        [player for player in PLAYERS if not player['experience']]
+
     balanced_teams = {}
     for team in TEAMS:
-        balanced_teams[team] = random.sample(players, int((len(PLAYERS) / 3)))
+        # build a team with equal numbers of experienced and 
+        # inexperienced players
+        balanced_teams[team] =\
+            random.sample(experienced_players, int((len(PLAYERS) / 6))) +\
+            random.sample(inexperienced_players, int((len(PLAYERS) / 6)))
 
+        # Remove players from their respective lists so we they
+        # aren't put on two teams at once
         for player in balanced_teams[team]:
-            players.remove(player)
+            
+            if player in experienced_players:
+                experienced_players.remove(player)
+            elif player in inexperienced_players:
+                inexperienced_players.remove(player)
 
     return balanced_teams
 
@@ -22,11 +43,19 @@ def random_team_assingment(PLAYERS, TEAMS):
 def display_team_stats(team_id, team_id_team, balanced_teams):  #wish I knew type hinting.
     """This function displays the stats for each player for each team"""
 
-    players_on_team = balanced_teams[team_id_team[team_id]]
+    team = team_id_team[team_id]
+    players_on_team = balanced_teams[team]
     
+    print(f"Team name: {team}")
+
+    number_of_players_on_team = len(players_on_team)
+    print(f'Number of players: {number_of_players_on_team}')
+
+    # print the players in a team on one line using python 3's robust
+    # print function. A real improvement over python 2
     for iterator, player_data in enumerate(players_on_team):
         
-        if iterator < (len(players_on_team) - 1):
+        if iterator < (number_of_players_on_team - 1):
             print(f"{player_data['name']}",end = ", ")
         else:
             print(f"{player_data['name']}",end = "\n")
@@ -44,7 +73,7 @@ if __name__ == "__main__":
         else:
             player_data['experience'] = False
 
-    PLAYERS = players[:]
+    PLAYERS = copy.deepcopy(players)
 
     balanced_teams = random_team_assingment(PLAYERS, TEAMS)
 
@@ -71,7 +100,11 @@ if __name__ == "__main__":
             for team_id, team in team_id_team.items():
                 print(f"{team_id} {team}")
             
-            user_team = int(input(": "))
+            try:
+                user_team = int(input(": "))
+            except ValueError:
+                print("Please enter an integer that corrosponds to the action"
+                " you want to take")
 
             #call team stats function based on input team
             display_team_stats(user_team, team_id_team, balanced_teams)
