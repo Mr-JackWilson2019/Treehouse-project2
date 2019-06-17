@@ -63,6 +63,8 @@ def display_team_stats(team_id, team_id_team, balanced_teams):  #wish I knew typ
 
 if __name__ == "__main__":
     TEAMS = [team for team in constants.TEAMS]
+    # I'm using the var PLAYERS for other stuff. Use constants.PLAYERS
+    # to get an unmodified version of the dict
     PLAYERS = copy.deepcopy(constants.PLAYERS)
     players = [player_data for player_data in PLAYERS]
     
@@ -75,6 +77,8 @@ if __name__ == "__main__":
             player_data['experience'] = False
 
     # making this a constant again. This seems like code smell
+    # also like I said, I'm using the var PLAYERS use constants.PLAYERS
+    # to get an unmodified version of the dict.
     PLAYERS = players
 
     balanced_teams = random_team_assingment(PLAYERS, TEAMS)
